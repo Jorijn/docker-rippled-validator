@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+github_info=$(curl --silent "https://api.github.com/repos/ripple/rippled/releases/latest")
+latest_version=$(echo $github_info |jq -r .tag_name)
+
+docker build \
+    --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+    --build-arg BUILD_VERSION=$(echo $latest_version) \
+    -t rippled-validator:latest \
+    -t rippled-validator:${latest_version} \
+    .
